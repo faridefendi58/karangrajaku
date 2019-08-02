@@ -1,0 +1,100 @@
+<!-- side navigation -->
+{% if not App.user.isGuest() %}
+{% set exts = App.optionModel.getInstalledExtensions() %}
+<nav id="side_nav">
+    <ul>
+        <li>
+            <a href="{{ '' | alink }}"><span class="ion-speedometer"></span> <span class="nav_title">Dashboard</span></a>
+        </li>
+        <li>
+            <a href="#">
+                <span class="ion-clipboard"></span>
+                <span class="nav_title">Halaman</span>
+            </a>
+            <div class="sub_panel">
+                <div class="side_inner">
+                    <h4 class="panel_heading panel_heading_first">Halaman</h4>
+                    <ul>
+                        <li><a href="{{ 'pages/view' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span>Daftar Halaman</a></li>
+                        <li><a href="{{ 'pages/create' | alink }}"><span class="side_icon ion-ios7-plus-outline"></span> Tambah Baru</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        {% if exts.blog %}
+        <li>
+            <a href="#">
+                <span class="ion-social-rss"></span>
+                <span class="nav_title">Blog</span>
+            </a>
+            <div class="sub_panel">
+                <div class="side_inner">
+                    <h4 class="panel_heading panel_heading_first">Blog</h4>
+                    <ul>
+                        <li><a href="{{ 'blog/posts/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span>Daftar Postingan</a></li>
+                        <li><a href="{{ 'blog/posts/create' | link }}"><span class="side_icon ion-ios7-plus-outline"></span> Tambah Baru</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        <li>
+            <a href="#">
+                <span class="ion-monitor"></span>
+                <span class="nav_title">Tampilan</span>
+            </a>
+            <div class="sub_panel">
+                <div class="side_inner">
+                    <h4 class="panel_heading panel_heading_first">Tampilan</h4>
+                    <ul>
+                        <li><a href="{{ 'themes/view' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span> Tema</a></li>
+                        {% if exts.slide %}
+                        <li><a href="{{ 'slides/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span> Slide Show</a></li>
+                        {% endif %}
+                        {% if exts.gallery %}
+                        <li><a href="{{ 'galleries/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span> Gallery</a></li>
+                        {% endif %}
+                        {% if exts.translation %}
+                        <li><a href="{{ 'translations/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span> Terjemahan</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </li>
+        {% if exts.product %}
+        <li>
+            <a href="#">
+                <span class="ion-briefcase"></span>
+                <span class="nav_title">Produk</span>
+            </a>
+            <div class="sub_panel">
+                <div class="side_inner">
+                    <h4 class="panel_heading panel_heading_first">Produk</h4>
+                    <ul>
+                        <li><a href="{{ 'products/category/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span> Kategori</a></li>
+                        <li><a href="{{ 'products/default/view' | link }}"><span class="side_icon ion-ios7-folder-outline"></span> Daftar Produk</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        <li>
+            <a href="#">
+                <span class="ion-settings"></span>
+                <span class="nav_title">Kelola</span>
+            </a>
+            <div class="sub_panel">
+                <div class="side_inner">
+                    <h4 class="panel_heading panel_heading_first">Kelola</h4>
+                    <ul>
+                        <li><a href="{{ 'params/view' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span> Parameter</a></li>
+                        <li><a href="{{ 'users/view' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span> User</a></li>
+                        <li><a href="{{ 'users/group' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span> User Goup</a></li>
+                        <li><a href="{{ 'extensions/view' | alink }}"><span class="side_icon ion-ios7-folder-outline"></span> Ekstensi</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% endif %}
