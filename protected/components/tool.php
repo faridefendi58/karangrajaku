@@ -155,6 +155,7 @@ class Tool
             $content = file_get_contents(realpath(dirname(__DIR__)).'/data/rss_feeds.json');
             $channel = json_decode($content, true);
             $expired_time = filemtime($fname) + (3600 * 6);
+            //$expired_time = filemtime($fname) + 60;
             if (!empty($channel) && (time() < $expired_time)) {
                 return $channel;
             }
@@ -165,16 +166,14 @@ class Tool
         if (in_array("rss_url", array_keys($options))) {
             $result = [];
             try {
-                $xml = simplexml_load_file($options['rss_url']);
+                $xml = simplexml_load_file($options['rss_url'], null, LIBXML_NOCDATA);
                 $result = $xml->channel;
             } catch (\Exception $e){$e->getMessage();}
 
             if (!empty($result)) {
                 try {
                     file_put_contents($fname, json_encode($result));
-                } catch (Exception $e) {
-                    var_dump($e->getMessage()); exit;
-                }
+                } catch (Exception $e) {}
                 return $result;
             }
         }
