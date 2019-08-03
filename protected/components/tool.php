@@ -148,4 +148,37 @@ class Tool
 
         return $text;
     }
+
+    public function get_rss() {
+        $fname = realpath(dirname(__DIR__)).'/data/rss_feeds.json';
+        if (file_exists(realpath(dirname(__DIR__)).'/data/rss_feeds.json')) {
+            $content = file_get_contents(realpath(dirname(__DIR__)).'/data/rss_feeds.json');
+            $channel = json_decode($content, true);
+            $expired_time = filemtime($fname) + (3600 * 6);
+            if (!empty($channel) && (time() < $expired_time)) {
+                return $channel;
+            }
+        }
+
+        $omodel = new \Model\OptionsModel();
+        $options = $omodel->getOptions();
+        if (in_array("rss_url", array_keys($options))) {
+            $result = [];
+            try {
+                $xml = simplexml_load_file($options['rss_url']);
+                $result = $xml->channel;
+            } catch (\Exception $e){$e->getMessage();}
+
+            if (!empty($result)) {
+                try {
+                    file_put_contents($fname, json_encode($result));
+                } catch (Exception $e) {
+                    var_dump($e->getMessage()); exit;
+                }
+                return $result;
+            }
+        }
+
+        return false;
+    }
 }
