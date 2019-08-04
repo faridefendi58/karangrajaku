@@ -19,6 +19,13 @@ $app->get('/sitemap.xml', function ($request, $response, $args) {
     return $response->withHeader('Content-Type','text/xml');
 });
 
+$app->get('/feed', function ($request, $response, $args) {
+    $tools = new \Components\Tool();
+    $params = $request->getParams();
+    $rss = $tools->get_rss($params);
+    var_dump($rss); exit;
+});
+
 $app->get('/lang/[{name}]', function ($request, $response, $args) use ($settings) {
     if (!empty($args['name'])) {
         setcookie("lang", $args['name'], time() + (24 * 3600), "/");

@@ -149,14 +149,14 @@ class Tool
         return $text;
     }
 
-    public function get_rss() {
+    public function get_rss($data = []) {
         $fname = realpath(dirname(__DIR__)).'/data/rss_feeds.json';
         if (file_exists(realpath(dirname(__DIR__)).'/data/rss_feeds.json')) {
             $content = file_get_contents(realpath(dirname(__DIR__)).'/data/rss_feeds.json');
             $channel = json_decode($content, true);
             $expired_time = filemtime($fname) + (3600 * 6);
             //$expired_time = filemtime($fname) + 60;
-            if (!empty($channel) && (time() < $expired_time)) {
+            if (!empty($channel) && (time() < $expired_time) && !isset($data['reload'])) {
                 return $channel;
             }
         }
@@ -168,7 +168,7 @@ class Tool
             try {
                 $xml = simplexml_load_file($options['rss_url'], null, LIBXML_NOCDATA);
                 $result = $xml->channel;
-            } catch (\Exception $e){$e->getMessage();}
+            } catch (\Exception $e){var_dump($e->getMessage());}
 
             if (!empty($result)) {
                 try {
