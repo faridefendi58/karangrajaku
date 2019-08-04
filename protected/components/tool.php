@@ -156,7 +156,7 @@ class Tool
             $channel = json_decode($content, true);
             $expired_time = filemtime($fname) + (3600 * 6);
             //$expired_time = filemtime($fname) + 60;
-            if (!empty($channel) && (time() < $expired_time) && !isset($data['reload'])) {
+            if (!empty($channel) && !isset($data['reload'])) {
                 return $channel;
             }
         }
