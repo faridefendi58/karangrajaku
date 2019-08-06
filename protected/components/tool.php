@@ -2,6 +2,8 @@
 
 namespace Components;
 
+use PanelAdmin\Components\simple_html_dom;
+
 class Tool
 {
     protected $_basePath;
@@ -157,6 +159,10 @@ class Tool
             $expired_time = filemtime($fname) + (3600 * 6);
             //$expired_time = filemtime($fname) + 60;
             if (!empty($channel) && !isset($data['reload'])) {
+                if (isset($data['id'])) {
+                    return $channel['item'][$data['id']];
+                }
+
                 return $channel;
             }
         }
@@ -166,7 +172,14 @@ class Tool
         if (in_array("rss_url", array_keys($options))) {
             $result = [];
             try {
-                $xml = simplexml_load_file($options['rss_url'], null, LIBXML_NOCDATA);
+                /*$xml = simplexml_load_file($options['rss_url'], null, LIBXML_NOCDATA);
+                $result = $xml->channel;*/
+                // using curl instead
+                $rss_data = $this->url_get_contents($options['rss_url']);
+                if (!empty($rss_data)) {
+                    $rss_data = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $rss_data);
+                }
+                $xml = simplexml_load_string($rss_data, null, LIBXML_NOCDATA);
                 $result = $xml->channel;
             } catch (\Exception $e){var_dump($e->getMessage());}
 
@@ -179,5 +192,23 @@ class Tool
         }
 
         return false;
+    }
+
+    public function url_get_contents ($Url) {
+
+        if (!function_exists('curl_init')){
+            die('CURL is not installed!');
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $Url);
+        curl_setopt($ch, CURLOPT_POST, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, "SomeUserAgent");
+        curl_setopt($ch, CURLOPT_COOKIE, 'AspxAutoDetectCookieSupport=1');
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
     }
 }

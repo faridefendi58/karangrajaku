@@ -26,6 +26,17 @@ $app->get('/feed', function ($request, $response, $args) {
     var_dump($rss); exit;
 });
 
+$app->get('/feed/[{id}]', function ($request, $response, $args) {
+    if (isset($args['id'])) {
+        $tools = new \Components\Tool();
+        $data = $tools->get_rss($args);
+
+        return $this->view->render($response, 'feed-detail.phtml', [
+            'data' => $data
+        ]);
+    }
+});
+
 $app->get('/lang/[{name}]', function ($request, $response, $args) use ($settings) {
     if (!empty($args['name'])) {
         setcookie("lang", $args['name'], time() + (24 * 3600), "/");
