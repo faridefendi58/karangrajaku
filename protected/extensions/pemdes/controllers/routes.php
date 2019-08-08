@@ -31,4 +31,17 @@ $app->get('/feed/[{id}]', function ($request, $response, $args) {
     }
 });
 
+$app->post('/letter-request', function ($request, $response, $args){
+    $status = 'failed';
+    $message = 'Data Anda gagal disimpan.';
+    $settings = $this->get('settings');
+    if (isset($_POST['Permohonan'])){
+        $status = 'success';
+        $message = 'Permohonan Anda telah berhasil disimpan';
+
+    }
+
+    return $response->withJson(['status' => $status, 'message' => $message]);
+});
+
 ?>
