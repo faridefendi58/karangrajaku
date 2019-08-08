@@ -45,7 +45,7 @@ class SuratPermohonanModel extends \Model\BaseModel
 
     public function getItems() {
         $sql = "SELECT i.*   
-        FROM {tablePrefix}ext_translation i 
+        FROM {tablePrefix}ext_pemdes_surat_permohonan i 
         WHERE 1";
 
         $sql .= " ORDER BY i.id ASC";
