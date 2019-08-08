@@ -32,6 +32,7 @@ class PemdesService
 
         $sql .= "CREATE TABLE IF NOT EXISTS `{tablePrefix}ext_pemdes_request_surat` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
+          `surat_permohonan_id` int(11) DEFAULT '0',
           `name` varchar(64) NOT NULL,
           `nik` varchar(32) NOT NULL,
           `email` varchar(32) DEFAULT NULL,

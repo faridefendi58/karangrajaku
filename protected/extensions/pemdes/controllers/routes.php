@@ -34,6 +34,7 @@ $app->get('/feed/[{id}]', function ($request, $response, $args) {
 $app->post('/surat-permohonan', function ($request, $response, $args){
     $errors = [];
     $success = false;
+    $request_params = $request->getParams();
     $params = [];
     if (isset($_POST['Permohonan'])){
         $params = $_POST['Permohonan'];
@@ -45,7 +46,12 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
         }
 
         if (count($errors) == 0) {
+            $smodel = \ExtensionsModel\SuratPermohonanModel::model()->findByAttributes(['slug' => $request_params['p']]);
+
             $model = new \ExtensionsModel\RequestSuratModel();
+            if ($smodel instanceof \RedBeanPHP\OODBBean) {
+                $model->surat_permohonan_id = $smodel->id;
+            }
             $model->name = $_POST['Permohonan']['name'];
             $model->nik = $_POST['Permohonan']['nik'];
             $model->email = $_POST['Permohonan']['email'];
