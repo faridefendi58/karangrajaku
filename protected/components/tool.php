@@ -194,8 +194,46 @@ class Tool
         return false;
     }
 
-    public function url_get_contents ($Url) {
+    public function get_rss_category($data = []) {
+        $fname = realpath(dirname(__DIR__)).'/data/rss_feeds_'. $data['category'] .'.json';
+        if (file_exists(realpath(dirname(__DIR__)).'/data/rss_feeds_'. $data['category'] .'.json')) {
+            $content = file_get_contents(realpath(dirname(__DIR__)).'/data/rss_feeds_'. $data['category'] .'.json');
+            $channel = json_decode($content, true);
+            $expired_time = filemtime($fname) + (3600 * 6);
+            if (!empty($channel) && !isset($data['reload'])) {
+                if (isset($data['id'])) {
+                    return $channel['item'][$data['id']];
+                }
 
+                return $channel;
+            }
+        }
+
+        $omodel = new \Model\OptionsModel();
+        $options = $omodel->getOptions();
+        if (array_key_exists("rss_url_". $data['category'], $options)) {
+            $result = [];
+            try {
+                $rss_data = $this->url_get_contents($options['rss_url_'. $data['category']]);
+                if (!empty($rss_data)) {
+                    $rss_data = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $rss_data);
+                }
+                $xml = simplexml_load_string($rss_data, null, LIBXML_NOCDATA);
+                $result = $xml->channel;
+            } catch (\Exception $e){var_dump($e->getMessage());}
+
+            if (!empty($result)) {
+                try {
+                    file_put_contents($fname, json_encode($result));
+                } catch (Exception $e) {}
+                return $result;
+            }
+        }
+
+        return false;
+    }
+
+    public function url_get_contents ($Url) {
         if (!function_exists('curl_init')){
             die('CURL is not installed!');
         }

@@ -16,7 +16,11 @@ foreach (glob(__DIR__.'/../components/*.php') as $component) {
 $app->get('/feed', function ($request, $response, $args) {
     $tools = new \Components\Tool();
     $params = $request->getParams();
-    $rss = $tools->get_rss($params);
+    if (array_key_exists('category', $params)) {
+        $rss = $tools->get_rss_category($params);
+    } else {
+        $rss = $tools->get_rss($params);
+    }
     var_dump($rss); exit;
 });
 
