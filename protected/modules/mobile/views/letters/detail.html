@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block pagetitle %}
+{{ App.tool.translate('Detail Application Letter') }} - {{ App.params.site_name }}
+{% endblock %}
+
+{% block header %}
+<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--white">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">{% block pagesection %}Detail {{ App.tool.translate('Application Letter') }}{% endblock %}</span>
+        <div class="mdl-layout-spacer"></div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--6-col-tablet mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title mdl-card--border">
+            <h4 class="mdl-card__title-text"><b>{{ data.title }}</b></h4>
+        </div>
+        <div class="mdl-card__supporting-text">
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Nama</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.name }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>NIK</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.nik }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>TTL</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.birth_place }}, {{ data.birth_date | date("d F Y") }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Alamat</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.address }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>No HP</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.handphone }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Keperluan</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">{{ data.notes }}</div>
+            </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            {% if data.status < 2 %}
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="removeLetter();">
+                Hapus
+            </a>
+            {% endif %}
+            {% if data.status != 1 %}
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="markAsDone();">
+                Tandai Sudah Selesai
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="ajaxContent" style="display: block;"></div>
+<footer class="mdl-mini-footer mdl-shadow--2dp">
+    <div class="mdl-mini-footer--left-section">
+        <button class="mb-3 mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="goBack()"><i class="material-icons mr-20">arrow_back</i> Kembali ke Daftar</button>
+    </div>
+</footer>
+{% endblock %}
+
+{% block endbodyjs %}
+<script type="text/javascript">
+    function goBack() {
+        window.history.back();
+    }
+
+    function removeLetter() {
+        if (confirm("Anda yakin ingin menghapus data ini ?")) {
+            var id = "{{ data.id }}";
+            $.ajax({
+                'beforeSend': function() { Loading.show(); },
+                'complete': function() { Loading.hide(); },
+                'url': "{{ 'mobile/letters/remove' | link }}/"+id,
+                'type':'post',
+                'dataType':'json',
+                'success': function(data){
+                    if (data.success) {
+                        var notification = document.querySelector('.mdl-js-snackbar');
+                        var data = {
+                            message: data.message,
+                            actionHandler: function(event) {
+                                goBack();
+                            },
+                            actionText: 'Close',
+                            timeout: 5000
+                        };
+                        notification.MaterialSnackbar.showSnackbar(data);
+                        setTimeout(function () {
+                            goBack();
+                        }, 6000);
+                    }
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function markAsDone() {
+        if (confirm("Anda yakin data ini sudah diproses?")) {
+            var id = "{{ data.id }}";
+            $.ajax({
+                'beforeSend': function() { Loading.show(); },
+                'complete': function() { Loading.hide(); },
+                'url': "{{ 'mobile/letters/complete' | link }}/"+id,
+                'type':'post',
+                'dataType':'json',
+                'success': function(data){
+                    if (data.success) {
+                        var notification = document.querySelector('.mdl-js-snackbar');
+                        var data = {
+                            message: data.message,
+                            actionHandler: function(event) {
+                                goBack();
+                            },
+                            actionText: 'Close',
+                            timeout: 5000
+                        };
+                        notification.MaterialSnackbar.showSnackbar(data);
+                        setTimeout(function () {
+                            goBack();
+                        }, 6000);
+                    }
+                }
+            });
+        }
+
+        return false;
+    }
+</script>
+{% endblock %}

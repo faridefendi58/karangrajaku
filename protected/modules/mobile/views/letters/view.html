@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block pagetitle %}
+{{ App.tool.translate('Application Letter') }} - {{ App.params.site_name }}
+{% endblock %}
+
+{% block header %}
+<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--white mdl-layout--fixed-tabs">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">{% block pagesection %}{{ App.tool.translate('Application Letter') }}{% endblock %}</span>
+        <div class="mdl-layout-spacer"></div>
+    </div>
+
+    <!-- Tab Container with Tab links -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--grey-300">
+        <!-- class is-active to show currently active tab -->
+        <a href="#fixed-tab-1" class="mdl-layout__tab is-active">{{ App.tool.translate('Pending') }}</a>
+        <a href="#fixed-tab-2" class="mdl-layout__tab">{{ App.tool.translate('Completed') }}</a>
+        <a href="#fixed-tab-3" class="mdl-layout__tab">{{ App.tool.translate('Canceled') }}</a>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.css' | module_path }}">
+<link rel="stylesheet" href="{{ 'mobile/assets/lib/material-modal/material-modal.min.css' | module_path }}">
+<style>
+    #fixed-tab-2 td, th {width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;}
+</style>
+<!-- Layout Container with Fixed Header and Tabs -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs">
+    <main class="mdl-layout__content">
+        <!-- Tab 1 -->
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+            {% include "letters/_pending.html" with {'model':model, 'status':0} %}
+        </section>
+
+        <!-- Tab 2 -->
+        <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+            {% include "letters/_pending.html" with {'model':model, 'status':1} %}
+        </section>
+
+        <!-- Tab 3 -->
+        <section class="mdl-layout__tab-panel" id="fixed-tab-3">
+            {% include "letters/_pending.html" with {'model':model, 'status':2} %}
+        </section>
+
+    </main>
+</div>
+{% endblock %}
+
+{% block beforemainjs %}
+<script src="{{ 'mobile/assets/lib/material-modal/material-modal.min.js' | module_path }}"></script>
+{% endblock %}
+
+{% block endbodyjs %}
+<script src="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/lib/datatable/jquery.dataTables.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/lib/datatable/dataTables.material.min.js' | module_path }}"></script>
+
+<script type="text/javascript">
+    function initItemAction() {
+        $('.show-detail').click(function () {
+            var id = $(this).attr("attr-id");
+            window.location.href = "{{ 'mobile/letters/detail' | link }}/"+id;
+        });
+    }
+
+    $(function () {
+        initItemAction();
+        $('.data-table').DataTable({
+            'info' : false,
+            "ordering": false,
+            "bLengthChange": false,
+            "bAutoWidth": false
+        });
+        var status = "{{ params.status }}";
+        alert(status);
+        if (status.length > 0) {
+            $('.mdl-layout__tab').removeClass('is-active');
+            $('.mdl-layout__tab-panel').removeClass('is-active');
+            $('a[href="#fixed-tab-'+ status +'"]').addClass('is-active');
+            $('section[id="fixed-tab-'+ status +'"]').addClass('is-active');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block pagetitle %}
+{{ App.tool.translate('Detail Contact') }} - {{ App.params.site_name }}
+{% endblock %}
+
+{% block header %}
+<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--white">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">{% block pagesection %}Detail {{ App.tool.translate('Contact') }}{% endblock %}</span>
+        <div class="mdl-layout-spacer"></div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--6-col mdl-cell--6-col-tablet mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__supporting-text">
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Nama</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.name }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Email</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.email }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"><b>No Handphone</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">{{ data.phone }}</div>
+            </div>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Pesan</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">{{ data.message }}</div>
+            </div>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="removeMessage();">
+                Hapus
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="ajaxContent" style="display: block;"></div>
+<footer class="mdl-mini-footer mdl-shadow--2dp">
+    <div class="mdl-mini-footer--left-section">
+        <button class="mb-3 mdl-button mdl-js-button mdl-button--raised mdl-button--colored" onclick="goBack()"><i class="material-icons mr-20">arrow_back</i> Kembali ke Daftar</button>
+    </div>
+</footer>
+{% endblock %}
+
+{% block endbodyjs %}
+<script type="text/javascript">
+    function goBack() {
+        window.history.back();
+    }
+
+    function removeMessage() {
+        if (confirm("Anda yakin ingin menghapus data ini ?")) {
+            var id = "{{ data.id }}";
+            $.ajax({
+                'beforeSend': function() { Loading.show(); },
+                'complete': function() { Loading.hide(); },
+                'url': "{{ 'mobile/contacts/remove' | link }}/"+id,
+                'type':'post',
+                'dataType':'json',
+                'success': function(data){
+                    if (data.success) {
+                        var notification = document.querySelector('.mdl-js-snackbar');
+                        var data = {
+                            message: data.message,
+                            actionHandler: function(event) {
+                                goBack();
+                            },
+                            actionText: 'Close',
+                            timeout: 5000
+                        };
+                        notification.MaterialSnackbar.showSnackbar(data);
+                        setTimeout(function () {
+                            goBack();
+                        }, 6000);
+                    }
+                }
+            });
+        }
+
+        return false;
+    }
+</script>
+{% endblock %}

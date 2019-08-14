@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+    <title>{% block pagetitle %}{% endblock %}</title>
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="{{ 'mobile/assets/images/android-desktop.png' | module_path }}">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+    <link rel="apple-touch-icon-precomposed" href="{{ 'mobile/assets/images/ios-desktop.png' | module_path }}">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="{{ 'mobile/assets/images/images/touch/ms-touch-icon-144x144-precomposed.png' | module_path }}">
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <link rel="shortcut icon" type="image/x-icon" href="{{ 'img/favicon.ico' | admin_asset_url }}" />
+
+    <link rel="stylesheet" href="{{ 'mobile/assets/fonts/roboto.css' | module_path }}">
+    <link rel="stylesheet" href="{{ 'mobile/assets/fonts/material-icons.css' | module_path }}">
+    <link rel="stylesheet" href="{{ 'mobile/assets/css/material.min.css' | module_path }}">
+    <link rel="stylesheet" href="{{ 'mobile/assets/css/material.cyan-light_blue.css' | module_path }}">
+    <link rel="stylesheet" href="{{ 'mobile/assets/css/styles.css' | module_path }}">
+    <style>
+        #view-source {position: fixed;display: block;right: 0;bottom: 0;margin-right: 40px;margin-bottom: 40px;z-index: 900;}
+    </style>
+
+</head>
+<body>
+<div class="loader"><span class="mdl-spinner mdl-js-spinner"></span></div>
+
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+    {% block header %}
+    <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--white">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">{% block pagesection %}{{ App.tool.translate('Dashboard') }}{% endblock %}</span>
+        </div>
+    </header>
+    {% endblock %}
+
+    <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        {% if not App.user.isGuest() %}
+        <header class="demo-drawer-header">
+            <i class="material-icons">person</i>
+            <div class="demo-avatar-dropdown">
+                <span>{{ App.user.name }}</span>
+                <div class="mdl-layout-spacer"></div>
+                <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                    <i class="material-icons" role="presentation">arrow_drop_down</i>
+                    <span class="visuallyhidden">Accounts</span>
+                </button>
+                <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+                    {#<a class="mdl-menu__item" href="#">
+                        <i class="material-icons mr-20">lock</i> {{ trans.get('mobile', 'Change Password') }}
+                    </a>
+                    <a class="mdl-menu__item" href="#">
+                        <i class="material-icons mr-20">account_circle</i> {{ trans.get('mobile', 'Update Profile') }}
+                    </a>#}
+                    <a class="mdl-menu__item" href="{{ 'mobile/default/logout' | link }}">
+                        <i class="material-icons mr-20">power_settings_new</i> {{ trans.get('mobile', 'Logout') }}
+                    </a>
+                </ul>
+            </div>
+        </header>
+        {% endif %}
+
+        {% block mainmenu %}
+        {% include 'partial/main_menu.html' %}
+        {% endblock %}
+
+    </div>
+
+    <main class="mdl-layout__content mdl-color--grey-200">
+        {% block content %} {% endblock %}
+    </main>
+
+    {% block footer %}{% endblock %}
+    <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button type="button" class="mdl-snackbar__action"></button>
+    </div>
+</div>
+
+{% block beforemainjs %}{% endblock %}
+
+<script src="{{ 'mobile/assets/js/jquery-3.3.1.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/js/material.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/js/main.js' | module_path }}"></script>
+
+{% block endbodyjs %}{% endblock %}
+</body>
+</html>

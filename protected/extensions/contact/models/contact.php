@@ -32,12 +32,31 @@ class ContactModel extends \Model\BaseModel
                 FROM {tablePrefix}ext_contact t 
                 WHERE 1";
 
+        $params = [];
+        if (isset($data['status'])) {
+            $sql .= ' AND t.status =:status';
+            $params['status'] = $data['status'];
+        }
         $sql .= ' ORDER BY t.created_at DESC';
 
         $sql = str_replace(['{tablePrefix}'], [$this->_tbl_prefix], $sql);
 
-        $rows = \Model\R::getAll( $sql );
+        $rows = \Model\R::getAll( $sql, $params );
 
         return $rows;
+    }
+
+    public function getItem($id) {
+        $sql = "SELECT t.* 
+                FROM {tablePrefix}ext_contact t 
+                WHERE id =:id";
+
+        $params = ['id' => $id];
+
+        $sql = str_replace(['{tablePrefix}'], [$this->_tbl_prefix], $sql);
+
+        $row = \Model\R::getRow( $sql, $params );
+
+        return $row;
     }
 }

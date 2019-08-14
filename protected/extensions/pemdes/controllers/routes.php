@@ -76,5 +76,4 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
         'success' => $success
     ]);
 });
-
 ?>

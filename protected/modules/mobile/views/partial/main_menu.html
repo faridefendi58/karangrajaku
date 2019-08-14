@@ -1,0 +1,17 @@
+{% if not App.user.isGuest() %}
+<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+    <a class="mdl-navigation__link" href="{{ 'mobile' | link }}">
+        <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>{{ App.tool.translate('Dashboard') }}
+    </a>
+    <a class="mdl-navigation__link" href="{{ 'mobile/letters/view' | link }}">
+        <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">assignment</i>{{ App.tool.translate('Application Letter') }}
+    </a>
+    <a class="mdl-navigation__link" href="{{ 'mobile/contacts/view' | link }}">
+        <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">assignment</i>{{ App.tool.translate('Contacts') }}
+    </a>
+    <div class="mdl-layout-spacer"></div>
+    <a class="mdl-navigation__link" href="{{ 'mobile/default/logout' | link }}">
+        <i class="material-icons mr-20">power_settings_new</i> {{ trans.get('mobile', 'Logout') }}
+    </a>
+</nav>
+{% endif %}

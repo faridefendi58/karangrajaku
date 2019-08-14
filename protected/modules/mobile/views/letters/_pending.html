@@ -1,0 +1,21 @@
+{% set items = model.getItems({'status':status}) %}
+<table class="mdl-data-table mdl-shadow--2dp mt-10 data-table">
+    <thead>
+    <tr>
+        <th style="text-align: center;width: 30%;">Nama</th>
+        <th style="width:70%;">Jenis Surat</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i, item in items %}
+    <tr class="show-detail" attr-id="{{ item.id }}">
+        <td style="padding: 10px;text-align: left;"><b>{{ item.name }}</b><br/>{{ item.nik }}</td>
+        <td>{{ item.title }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="2">{{ App.tool.translate('No item found.') }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block pagetitle %}
+Dashboard - {{ App.params.site_name }}
+{% endblock %}
+
+{% block pagesection %}{{ trans.get('mobile', 'Dashboard') }}{% endblock %}
+
+{% block content %}
+<div class="mdl-grid demo-content">
+    {% set pending_surats = App.call.model("\\ExtensionsModel\\RequestSuratModel", 'getStatistic', {'status':0}) %}
+    <div class="mdl-cell mdl-cell--4-col-phone mdl-cell--4-col-desktop">
+        <div class="mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title ft-white mdl-color--pink-700">
+                <span class="x-icon material-icons mr-2">check_box_outline_blank</span> Surat Belum Diproses
+            </div>
+            <div class="mdl-card__supporting-text pb-2 scroll">
+                <div class="mdl-list mdl-list-flush m-0">
+                    {% for i, pending in pending_surats %}
+                    <a href="{{ 'mobile/letters/view' | link }}" class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content ft-15"> {{ pending.title }}</span>
+                        <span class="ft-12">{{ pending.total }}</span>
+                    </a>
+                    {% else %}
+                    Tidak ditemukan surat permohonan yang belum di proses.
+                    {% endfor %}
+                </div>
+            </div>
+        </div> <!-- end mdl-card -->
+    </div>
+
+    {% set complete_surats = App.call.model("\\ExtensionsModel\\RequestSuratModel", 'getStatistic', {'status':1}) %}
+    <div class="mdl-cell mdl-cell--4-col-phone mdl-cell--4-col-desktop">
+        <div class="mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title ft-white mdl-color--blue-700">
+                <span class="x-icon material-icons mr-2">playlist_add_check</span>Surat Sudah Diproses
+            </div>
+            <div class="mdl-card__supporting-text pb-2 scroll">
+                <div class="mdl-list mdl-list-flush m-0">
+                    {% for i, complete in complete_surats %}
+                    <a href="{{ 'mobile/letters/view' | link }}?status=1" class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content ft-15">{{ complete.title }}</span>
+                        <span class="ft-12">{{ complete.total }}</span>
+                    </a>
+                    {% else %}
+                    Tidak ditemukan surat permohonan yang sudah di proses.
+                    {% endfor %}
+                </div>
+            </div>
+        </div> <!-- end mdl-card -->
+    </div>
+</div>
+{% endblock %}
