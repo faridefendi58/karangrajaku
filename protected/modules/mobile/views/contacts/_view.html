@@ -13,7 +13,7 @@
         <td>{{ item.phone }}</td>
     </tr>
     {% else %}
-    <tr>
+    <tr class="no-data">
         <td colspan="2">{{ App.tool.translate('No item found.') }}</td>
     </tr>
     {% endfor %}

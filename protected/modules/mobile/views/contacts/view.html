@@ -21,7 +21,6 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.css' | module_path }}">
-<link rel="stylesheet" href="{{ 'mobile/assets/lib/material-modal/material-modal.min.css' | module_path }}">
 <style>
     #fixed-tab-2 td, th {width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;}
 </style>
@@ -43,10 +42,6 @@
 </div>
 {% endblock %}
 
-{% block beforemainjs %}
-<script src="{{ 'mobile/assets/lib/material-modal/material-modal.min.js' | module_path }}"></script>
-{% endblock %}
-
 {% block endbodyjs %}
 <script src="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.js' | module_path }}"></script>
 <script src="{{ 'mobile/assets/lib/datatable/jquery.dataTables.min.js' | module_path }}"></script>
@@ -62,12 +57,18 @@
 
     $(function () {
         initItemAction();
-        $('.data-table').DataTable({
-            'info' : false,
-            "ordering": false,
-            "bLengthChange": false,
-            "bAutoWidth": false
-        });
+        if ($('.data-table').length > 0) {
+            $('.data-table').each(function () {
+                if ($(this).find('tr.no-data').length == 0) {
+                    $(this).DataTable({
+                        'info' : false,
+                        "ordering": false,
+                        "bLengthChange": false,
+                        "bAutoWidth": false
+                    });
+                }
+            });
+        }
     });
 </script>
 {% endblock %}
