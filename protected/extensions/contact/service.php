@@ -24,6 +24,7 @@ class ContactService
           `email` varchar(128) NOT NULL,
           `phone` varchar(32) DEFAULT NULL,
           `message` text,
+          `images` text DEFAULT NULL,
           `status` int(11) DEFAULT 0,
           `created_at` datetime DEFAULT NULL,
           PRIMARY KEY (`id`)

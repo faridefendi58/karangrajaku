@@ -26,15 +26,25 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
             $model->email = $_POST['Contact']['email'];
             $model->phone = $_POST['Contact']['phone'];
             $model->message = $_POST['Contact']['message'];
+            if (isset($_FILES) && !empty($_FILES['Contact'])) {
+                $path_info = pathinfo($_FILES['Contact']['name']['image']);
+                if (!in_array($path_info['extension'], ['jpg','JPG','jpeg','JPEG','png','PNG'])) {
+                    echo json_encode(['status'=>'failed','message'=>'Allowed file type are jpg, png']); exit;
+                }
+                $model->images = time().'.'.$path_info['extension'];
+            }
             $model->created_at = date("Y-m-d H:i:s");
             $save = \ExtensionsModel\ContactModel::model()->save($model);
             if ($save) {
+                $uploadfile = 'uploads/images/contacts/' . $model->images;
+                move_uploaded_file($_FILES['Contact']['tmp_name']['image'], $uploadfile);
+
                 $success = true;
                 $params = [];
                 $message = 'Pesan Anda berhasil dikirim. Kami akan segera merespon pesan Anda.';
 
                 //send mail to admin
-                /*$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
                 try {
                     //Server settings
                     $mail->SMTPDebug = 0;
@@ -47,29 +57,30 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
                     $mail->Port = $settings['params']['smtp_port'];
 
                     //Recipients
-                    $mail->setFrom( $settings['params']['admin_email'], 'Admin slightSite' );
-                    $mail->addAddress( $settings['params']['admin_email'], 'Farid Efendi' );
+                    $mail->setFrom( $settings['params']['admin_email'], 'Admin Karang Raja' );
+                    $mail->addAddress( $settings['params']['admin_email'], 'Pemdes Karang Raja' );
                     $mail->addReplyTo( $_POST['Contact']['email'], $_POST['Contact']['name'] );
 
                     //Content
                     $mail->isHTML(true);
-                    $mail->Subject = '[slightSite] Kontak Kami';
+                    $mail->Subject = '[Karang Raja Apps] Kontak Kami';
                     $mail->Body = "Halo Admin,
                     <br/><br/>
                     Ada pesan baru dari pengunjung dengan data berikut:
                     <br/><br/>
-                    <b>Judul pesan</b> : ".$_POST['Contact']['subject']." <br/>
                     <b>Nama pengunjung</b> : ".$_POST['Contact']['name']." <br/>
                     <b>Alamat Email</b> : ".$_POST['Contact']['email']." <br/>
                     <br/>
                     <b>Isi Pesan</b> :<br/> ".$_POST['Contact']['message']."";
 
+                    if (!empty($model->images)) {
+                        $mail->addAttachment('uploads/images/contacts/' . $model->images);
+                    }
                     $mail->send();
                 } catch (Exception $e) {
                     echo 'Message could not be sent.';
                     echo 'Mailer Error: ' . $mail->ErrorInfo;
-                    exit;
-                }*/
+                }
             } else {
                 $success = false;
                 $errors = \ExtensionsModel\ContactModel::model()->getErrors(true, true);

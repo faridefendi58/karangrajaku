@@ -39,6 +39,8 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
     $errors = [];
     $success = false;
     $request_params = $request->getParams();
+    $settings = $this->get('settings');
+
     $params = [];
     if (isset($_POST['Permohonan'])){
         $params = $_POST['Permohonan'];
@@ -68,6 +70,50 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
             if ($save) {
                 $success = true;
                 $params = [];
+
+                //send mail to admin
+                $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                try {
+                    //Server settings
+                    $mail->SMTPDebug = 0;
+                    $mail->isSMTP();
+                    $mail->Host = $settings['params']['smtp_host'];
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $settings['params']['admin_email'];
+                    $mail->Password = $settings['params']['smtp_secret'];
+                    $mail->SMTPSecure = $settings['params']['smtp_secure'];
+                    $mail->Port = $settings['params']['smtp_port'];
+
+                    //Recipients
+                    $mail->setFrom( $settings['params']['admin_email'], 'Admin Karang Raja' );
+                    $mail->addAddress( $settings['params']['admin_email'], 'Pemdes Karang Raja' );
+                    if (!empty($_POST['Permohonan']['email'])) {
+                        $mail->addReplyTo( $_POST['Permohonan']['email'], $_POST['Permohonan']['name'] );
+                    } else {
+                        $mail->addReplyTo( $_POST['Permohonan']['admin_email'], $_POST['Permohonan']['name'] );
+                    }
+
+                    //Content
+                    $mail->isHTML(true);
+                    $mail->Subject = '[Permohonan] '. $smodel->title;
+                    $mail->Body = "Halo Admin,
+                    <br/><br/>
+                    Ada permohonan <b>". $smodel->title ."</b> dengan data berikut:
+                    <br/><br/>
+                    <b>Nama Pemohon</b> : ".$_POST['Permohonan']['name']." <br/>
+                    <b>NIK Pemohon</b> : ".$_POST['Permohonan']['nik']." <br/>
+                    <b>Email Pemohon</b> : ".$_POST['Permohonan']['email']." <br/>
+                    <b>Tempat Tgl Lahir</b> : ".$_POST['Permohonan']['birth_place']. ", ". $_POST['Permohonan']['birth_date']. '-'. $_POST['Permohonan']['birth_month'].'-'.$_POST['Permohonan']['birth_year']." <br/>
+                    <b>No Handphone</b> : ".$_POST['Permohonan']['handphone']." <br/>
+                    <br/>
+                    <b>Keperluan</b> :<br/> ".$_POST['Permohonan']['notes']."";
+
+                    $mail->send();
+                } catch (Exception $e) {
+                    echo 'Message could not be sent.';
+                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                }
+
             } else {
                 $errors = \ExtensionsModel\RequestSuratModel::model()->getErrors(true, true);
             }

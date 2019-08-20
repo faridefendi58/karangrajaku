@@ -22,7 +22,7 @@
 .hover-1,.mdl-layout__tab-bar.hover_tab .mdl-layout__tab,.mdl-tab__dropdown-item{transition:.2s linear;-o-transition:.2s linear;-moz-transition:.2s linear;-webkit-transition:.2s linear}
 .hover-1:focus,.hover-1:hover,.mdl-layout__tab-bar.hover_tab .mdl-layout__tab:focus,.mdl-layout__tab-bar.hover_tab .mdl-layout__tab:hover,.mdl-tab__dropdown-item:focus,.mdl-tab__dropdown-item:hover{text-decoration:none;background-color:rgba(0,0,0,.06)!important}
 .hover-1:active,.mdl-layout__tab-bar.hover_tab .mdl-layout__tab:active,.mdl-tab__dropdown-item:active{background-color:rgba(0,0,0,.1)!important}
-.bg-indigo{background-color:#3f51b5}
+.bg-indigo{background-color:#1bac4b}
 .bg-amber{background-color:#ffc107}
 .bg-blue_grey{background-color:#607d8b}
 .bg-blue{background-color:#2196f3}
@@ -169,7 +169,7 @@
 .mdl-layout__dark-theme .no-bg__color,.mdl-layout__dark-theme-full .no-bg__color{background-color:unset!important}
 .mdl-navigation{position:absolute;top:64px;bottom:0;left:0;right:0}
 .mdl-navigation .mdl-navigation__link{color:#000!important;padding:12px 12px 12px 20px!important}
-.mdl-layout__indigo-skin .mdl-navigation__link.active,.mdl-navigation .mdl-navigation__link.active{color:#3f51b5!important}
+.mdl-layout__indigo-skin .mdl-navigation__link.active,.mdl-navigation .mdl-navigation__link.active{color:#1bac4b!important}
 .mdl-navigation .mdl-navigation__link .x-icon{vertical-align:middle;margin-right:10px;font-size:22px}
 .mdl-navigation .mdl-navigation__dropdown{list-style-type:none;margin:0;padding-left:0;display:none}
 .mdl-navigation .mdl-navigation__toggle>.mdl-navigation__link:after{transition:.3s linear;-o-transition:.3s linear;-moz-transition:.3s linear;-webkit-transition:.3s linear;transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-webkit-transform:rotate(-90deg);float:right;content:'';width:18px;height:18px;margin-top:5px;background-size:contain;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAZ0lEQVR4Ae3MMQ4CIRgF4Yn2JHBEzqUWnsflSLBhazYZWvNP+14+ov2i6EnirsTDM19+ZFYVGh9LvRmMSS2Zub1QVfp1P8hLplNhlyqCUVSjCMZSgnGUYBwlGEMJxlKCkVQliqJ/6wSw0UNZdSsg1gAAAABJRU5ErkJggg==)}
@@ -177,7 +177,7 @@
 .mdl-navigation .mdl-navigation__toggle .mdl-navigation__link.active~.mdl-navigation__dropdown{display:block}
 .mdl-navigation .mdl-navigation__toggle .mdl-navigation__link.active:after{transform:rotate(0);-o-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-webkit-transform:rotate(0)}
 .mdl-navigation .mdl-navigation__toggle>.mdl-navigation__link.active.is_slide:after{transform:rotate(-90deg);-o-transform:rotate(-90deg);-ms-transform:rotate(-90deg);-moz-transform:rotate(-90deg);-webkit-transform:rotate(-90deg)}
-.mdl-layout__indigo-skin .mdl-layout__drawer .mdl-layout-title,.mdl-layout__indigo-skin .mdl-layout__header{background-color:#3f51b5!important}
+.mdl-layout__indigo-skin .mdl-layout__drawer .mdl-layout-title,.mdl-layout__indigo-skin .mdl-layout__header{background-color:#1bac4b!important}
 .mdl-layout__amber-skin .mdl-layout__drawer .mdl-layout-title,.mdl-layout__amber-skin .mdl-layout__header{background-color:#ffc107!important}
 .mdl-layout__amber-skin .mdl-navigation__link.active{color:#ffc107!important}
 .mdl-layout__blue_grey-skin .mdl-layout__drawer .mdl-layout-title,.mdl-layout__blue_grey-skin .mdl-layout__header{background-color:#607d8b!important}
@@ -223,10 +223,10 @@
 .mdl-layout__dark-sidebar .mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover,.mdl-layout__dark-sidebar-full .mdl-layout__drawer .mdl-navigation .mdl-navigation__link:hover{background-color:rgba(0,0,0,.5)}
 .mdl-layout__dark-sidebar .mdl-layout__drawer .mdl-navigation .mdl-navigation__toggle>.mdl-navigation__link:after,.mdl-layout__dark-sidebar-full .mdl-layout__drawer .mdl-navigation .mdl-navigation__toggle>.mdl-navigation__link:after{filter:invert(1);-webkit-filter:invert(1)}
 .mdl-layout__dark-sidebar .ft-black-opc,.mdl-layout__dark-sidebar-full .ft-black-opc{color:rgba(255,255,255,.3)!important}
-.mdl-layout__dark-sidebar .mdl-layout__drawer .mdl-layout-title{background-color:#3f51b5}
+.mdl-layout__dark-sidebar .mdl-layout__drawer .mdl-layout-title{background-color:#1bac4b}
 .mdl-layout__dark-sidebar-full .mdl-layout__drawer .mdl-layout-title{background-color:rgba(0,0,0,0)!important;color:rgba(255,255,255,.9)!important}
 .mdl-layout__drawer{overflow-y:hidden;background-color:#fff}
-.mdl-layout__drawer .mdl-layout-title{color:#fff;background-color:#3f51b5}
+.mdl-layout__drawer .mdl-layout-title{color:#fff;background-color:#1bac4b}
 .mdl-menu .mdl-menu__item .x-icon{vertical-align:middle;margin-right:10px}
 .mdl-menu__grid{display:flex;flex-wrap:wrap;justify-content:space-around;width:300px}
 .mdl-menu__grid .mdl-menu__item{width:60px;padding:15px;text-align:center}
@@ -386,10 +386,10 @@ h1.mdl-media-title,h2.mdl-media-title,h3.mdl-media-title,h4.mdl-media-title,h5.m
 .mdl-textfield--file .mdl-textfield__input{box-sizing:border-box;width:calc(100% - 32px)}
 .mdl-textfield--file .mdl-button--file{right:0}
 .mdl-textfield--file .mdl-button--file input{cursor:pointer;height:100%;right:0;opacity:0;position:absolute;top:0;width:300px;z-index:4}
-.wizard>.steps .current a{background:#3f51b5}
+.wizard>.steps .current a{background:#1bac4b}
 .wizard.vertical>.content{min-height:23em!important}
 .wizard>.steps .current{border-radius:inherit;-webkit-filter:drop-shadow(1px 6px 3px rgba(0, 0, 0, .11))}
-.wizard>.actions a,.wizard>.actions a:active,.wizard>.actions a:hover{background:#3f51b5;padding-top:0;padding-bottom:0;border-radius:inherit}
+.wizard>.actions a,.wizard>.actions a:active,.wizard>.actions a:hover{background:#1bac4b;padding-top:0;padding-bottom:0;border-radius:inherit}
 div.dataTables_wrapper div.dataTables_paginate .pagination button{height:30px;line-height:0;font-size:12px}
 .dataTables_info{font-size:12px}
 .dataTables_filter input[type=search]:focus{border-bottom:2px solid #00f;outline:0}
@@ -417,3 +417,7 @@ div.dataTables_wrapper div.dataTables_paginate .pagination button{height:30px;li
 @media screen and (max-width:768px) and (min-width:240px){.x-sidebar-right{top:56px}
   .mdl-layout--tab-bar .x-sidebar-right{top:104px}
 }
+.mdl-layout__header {background-color: #1bac4b;}
+.swiper-pagination-bullet-active {background: #1bac4b !important;}
+.mdl-button.mdl-button--colored {color: #1bac4b;}
+.mdl-button--raised.mdl-button--colored {background: #1bac4b;color: #fff;}
