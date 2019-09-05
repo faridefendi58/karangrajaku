@@ -1,0 +1,171 @@
+{% extends "layout.html" %}
+{% block pagetitle %}
+{{ App.tool.translate('Announcement') }} - {{ App.params.site_name }}
+{% endblock %}
+
+{% block header %}
+<header class="demo-header mdl-layout__header mdl-color--green-600 mdl-color-text--white mdl-layout--fixed-tabs">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">{% block pagesection %}{{ App.tool.translate('Announcement') }}{% endblock %}</span>
+        <div class="mdl-layout-spacer"></div>
+    </div>
+
+    <!-- Tab Container with Tab links -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--grey-300">
+        <!-- class is-active to show currently active tab -->
+        <a href="#fixed-tab-1" class="mdl-layout__tab is-active">{{ App.tool.translate('Create') }}</a>
+        <a href="#fixed-tab-2" class="mdl-layout__tab">{{ App.tool.translate('Archive') }}</a>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.css' | module_path }}">
+<style>
+    #fixed-tab-2 td, th {width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;}
+</style>
+<!-- Layout Container with Fixed Header and Tabs -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs">
+    <main class="mdl-layout__content">
+        <!-- Tab 1 -->
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+            {% include "announcements/_create.html" with {'model':model} %}
+        </section>
+
+        <!-- Tab 2 -->
+        <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+            {% include "announcements/_view.html" with {'model':model} %}
+        </section>
+
+    </main>
+</div>
+{% endblock %}
+
+{% block endbodyjs %}
+<script src="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/lib/datatable/jquery.dataTables.min.js' | module_path }}"></script>
+<script src="{{ 'mobile/assets/lib/datatable/dataTables.material.min.js' | module_path }}"></script>
+
+<script type="text/javascript">
+    function initItemAction() {
+        $('.show-detail').click(function () {
+            var id = $(this).attr("attr-id");
+            window.location.href = "{{ 'mobile/announcements/detail' | link }}/"+id;
+        });
+    }
+
+    $(function () {
+        initItemAction();
+        if ($('.data-table').length > 0) {
+            $('.data-table').each(function () {
+                if ($(this).find('tr.no-data').length == 0) {
+                    $(this).DataTable({
+                        'info' : false,
+                        "ordering": false,
+                        "bLengthChange": false,
+                        "bAutoWidth": false
+                    });
+                }
+            });
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    var errors = [];
+    function submitForm(dt) {
+        $('.required').each(function () {
+            if ($(this).val().length == 0) {
+                var label = $(this).parent().find('label').html();
+                errors.push(label + ' tidak boleh dikosongi.');
+            }
+        });
+
+        if ($('.is-invalid').length > 0) {
+            var invalid_inputs = [];
+            $('.is-invalid').each(function () {
+                var label = $(this).find('label').html();
+                invalid_inputs.push(label);
+            });
+
+            var inv_input_message = invalid_inputs.join(", ");
+            errors.push("Mohon perbaiki kesalahan di inputan "+ inv_input_message);
+        }
+
+        console.log(errors);
+        if (errors.length > 0) {
+            var error_messages = "<ul>";
+            for (var i = 0; i < errors.length; i++) {
+                error_messages += "<li>"+ errors[i] +"</li>";
+            }
+            error_messages += "</ul>";
+            $('.mdl-color--orange').html(error_messages).show();
+
+            var elmnt = document.getElementById("content");
+            elmnt.scrollIntoView();
+
+            return false;
+        } else {
+            var form = $('#form-announcement');
+            form.find('input[type="submit"]').trigger("click");
+            return false;
+        }
+    }
+
+    function onSelectFile(dt) {
+        if ((/\.(jpg|jpeg|JPG|JPEG|png)$/i).test(dt.files[0].name)) {
+            // check the size
+            if (dt.files[0].size > 300000) {
+                errors.push('Ukuran maksimal gambar adalah 300kb.');
+                console.log(errors);
+                if (errors.length > 0) {
+                    var error_messages = "<ul>";
+                    for (var i = 0; i < errors.length; i++) {
+                        error_messages += "<li>"+ errors[i] +"</li>";
+                    }
+                    error_messages += "</ul>";
+                    $('.mdl-color--orange').html(error_messages).show();
+
+                    var elmnt = document.getElementById("content");
+                    elmnt.scrollIntoView();
+
+                    return false;
+                }
+            } else {
+                document.getElementById('basic_input_file1').value = dt.files[0].name;
+            }
+        } else {
+            errors.push('Hanya gambar dengan ekstensi jpg dan png yang diperbolehkan.');
+            console.log(errors);
+            if (errors.length > 0) {
+                var error_messages = "<ul>";
+                for (var i = 0; i < errors.length; i++) {
+                    error_messages += "<li>"+ errors[i] +"</li>";
+                }
+                error_messages += "</ul>";
+                $('.mdl-color--orange').html(error_messages).show();
+
+                var elmnt = document.getElementById("content");
+                elmnt.scrollIntoView();
+
+                return false;
+            }
+        }
+    }
+
+    $(function () {
+
+        var success = "{{ success }}";
+        if (success) {
+            setTimeout(function () {
+                window.location.href = "{{ 'mobile/announcements/view' | link }}";
+            }, 3000);
+        }
+
+        $('#basic_input_file1').click(function () {
+            $('#file_image_input').trigger('click');
+        });
+    });
+</script>
+{% endblock %}

@@ -35,6 +35,20 @@ $app->get('/feed/[{id}]', function ($request, $response, $args) {
     }
 });
 
+$app->get('/announcement/[{id}]', function ($request, $response, $args) {
+    if (isset($args['id'])) {
+        $tools = new \Components\Tool();
+        $model = new \ExtensionsModel\PostModel();
+        $data = $model->getPostDetail($args['id']);
+        $images = $model->getImages(['id' => $args['id']]);
+
+        return $this->view->render($response, 'announcement-detail.phtml', [
+            'data' => $data,
+            'images' => $images
+        ]);
+    }
+});
+
 $app->post('/surat-permohonan', function ($request, $response, $args){
     $errors = [];
     $success = false;

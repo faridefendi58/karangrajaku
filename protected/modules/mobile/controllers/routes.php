@@ -34,6 +34,9 @@ $app->group('/mobile', function () use ($user) {
     $this->group('/contacts', function() use ($user) {
         new Mobile\Controllers\ContactsController($this, $user);
     });
+    $this->group('/announcements', function() use ($user) {
+        new Mobile\Controllers\AnnouncementsController($this, $user);
+    });
 });
 
 ?>

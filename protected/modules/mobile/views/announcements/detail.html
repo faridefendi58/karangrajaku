@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block pagetitle %}
-{{ App.tool.translate('Detail Contact') }} - {{ App.params.site_name }}
+{{ App.tool.translate('Detail Announcement') }} - {{ App.params.site_name }}
 {% endblock %}
 
 {% block header %}
 <header class="demo-header mdl-layout__header mdl-color--green-600 mdl-color-text--white">
     <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title">{% block pagesection %}Detail {{ App.tool.translate('Contact') }}{% endblock %}</span>
+        <span class="mdl-layout-title">{% block pagesection %}Detail {{ App.tool.translate('Announcement') }}{% endblock %}</span>
         <div class="mdl-layout-spacer"></div>
     </div>
 </header>
@@ -17,20 +17,20 @@
     <div class="mdl-cell mdl-cell--6-col mdl-cell--6-col-tablet mdl-card mdl-shadow--2dp">
         <div class="mdl-card__supporting-text">
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Nama</b></div>
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.name }}</div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Judul</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.content[1].title }}</div>
             </div>
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Email</b></div>
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.email }}</div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Content</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">{{ data.content[1].content }}</div>
             </div>
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"><b>No Handphone</b></div>
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">{{ data.phone }}</div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"><b>Status</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">{{ data.status }}</div>
             </div>
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Pesan</b></div>
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">{{ data.message }}</div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone"><b>Tanggal Dibuat</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">{{ data.created_at | date("d M Y H:i") }}</div>
             </div>
         </div>
         <div class="mdl-card__actions mdl-card--border">
@@ -63,7 +63,7 @@
             $.ajax({
                 'beforeSend': function() { Loading.show(); },
                 'complete': function() { Loading.hide(); },
-                'url': "{{ 'mobile/contacts/remove' | link }}/"+id,
+                'url': "{{ 'mobile/announcements/remove' | link }}/"+id,
                 'type':'post',
                 'dataType':'json',
                 'success': function(data){
