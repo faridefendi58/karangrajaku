@@ -12,7 +12,7 @@
 .demo-mdl-progress{line-height:inherit}
 .demo-mdl-progress .mdl-progress{height:8px}
 .mdl-layout-title{padding-left:20px!important}
-.demo-logo{height:30px;margin-top:-6px;margin-right:5px;animation:logo_animation 15s linear infinite;-o-animation:logo_animation 15s linear infinite;-moz-animation:logo_animation 15s linear infinite;-webkit-animation:logo_animation 15s linear infinite}
+.demo-logo{height:30px;margin-top:-6px;margin-right:5px;}
 @-webkit-keyframes logo_animation{from{-webkit-filter:hue-rotate(0)}
     to{-webkit-filter:hue-rotate(360deg)}
 }
