@@ -273,4 +273,25 @@ class Tool
         return ($binary{0} == "0" ? bindec($binary) :
             -(pow(2, 31) - bindec(substr($binary, 1))));
     }
+
+    public function getImageFromRss($content) {
+        $html_dom = new \PanelAdmin\Components\DomHelper();
+
+        $html = $html_dom->str_get_html($content);
+
+        $src = $html->find('img', 0)->src;
+        if (!empty($src)) {
+            $path = parse_url($src, PHP_URL_PATH);
+            if (file_exists('uploads/images/slides/'.basename($path))) {
+                $omodel = new \Model\OptionsModel();
+                $options = $omodel->getOptions();
+
+                return $options['site_url'].'/uploads/images/slides/'.basename($path);
+            }
+
+            return $src;
+        }
+
+        return null;
+    }
 }
