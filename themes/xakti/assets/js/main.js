@@ -3,7 +3,18 @@
 
     $('.mdl-layout__content').addClass('scroll');
 
-    $(window).on('load', function(){$('.loader-bg').hide();});
+    $(window).on('load', function(){
+        $('.loader-bg').hide();
+        if ($('.mdl-card__title').length > 0) {
+            $('.mdl-card__title').each(function () {
+                var data_bg = $(this).attr('data-background');
+                if (data_bg.length > 0) {
+                    $(this).attr('style', "background:url("+ data_bg +") center / cover;height:200px;");
+                    $(this).removeAttr('data-background');
+                }
+            });
+        }
+    });
 
     $('.ajax-link').click(function () {
         var href = $(this).attr('href');
