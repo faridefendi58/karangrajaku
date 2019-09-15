@@ -11,6 +11,9 @@ class DefaultController extends BaseController
     public function __construct($app, $user)
     {
         parent::__construct($app, $user);
+        if (!empty($this->_settings['installPath'])) {
+            $this->_login_url = '/'.$this->_settings['installPath'].$this->_login_url;
+        }
     }
 
     public function register($app)
@@ -39,8 +42,13 @@ class DefaultController extends BaseController
                     if ($login){
                         if (isset($_GET['r']))
                             return $response->withRedirect( $_GET['r'] );
-                        else
-                            return $response->withRedirect('/panel-admin');
+                        else {
+                            if (!empty($this->_settings['installPath'])) {
+                                return $response->withRedirect('/'.$this->_settings['installPath'].'/panel-admin');
+                            } else {
+                                return $response->withRedirect('/panel-admin');
+                            }
+                        }
                     }
                 } else {
                     $args['error']['message'] = 'Password yang Anda masukkan salah.';

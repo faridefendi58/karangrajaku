@@ -693,28 +693,48 @@ class simple_html_dom_node
         $result = array();
         //print_r($matches);
 
-        foreach ($matches as $m) {
-            $m[0] = trim($m[0]);
-            if ($m[0]==='' || $m[0]==='/' || $m[0]==='//') continue;
-            // for browser generated xpath
-            if ($m[1]==='tbody') continue;
+        if (is_array($matches) && count($matches) > 0) {
+            foreach ($matches as $m) {
+                $m[0] = trim($m[0]);
+                if ($m[0] === '' || $m[0] === '/' || $m[0] === '//') continue;
+                // for browser generated xpath
+                if ($m[1] === 'tbody') continue;
 
-            list($tag, $key, $val, $exp, $no_key) = array($m[1], null, null, '=', false);
-            if (!empty($m[2])) {$key='id'; $val=$m[2];}
-            if (!empty($m[3])) {$key='class'; $val=$m[3];}
-            if (!empty($m[4])) {$key=$m[4];}
-            if (!empty($m[5])) {$exp=$m[5];}
-            if (!empty($m[6])) {$val=$m[6];}
+                list($tag, $key, $val, $exp, $no_key) = array($m[1], null, null, '=', false);
+                if (!empty($m[2])) {
+                    $key = 'id';
+                    $val = $m[2];
+                }
+                if (!empty($m[3])) {
+                    $key = 'class';
+                    $val = $m[3];
+                }
+                if (!empty($m[4])) {
+                    $key = $m[4];
+                }
+                if (!empty($m[5])) {
+                    $exp = $m[5];
+                }
+                if (!empty($m[6])) {
+                    $val = $m[6];
+                }
 
-            // convert to lowercase
-            if ($this->dom->lowercase) {$tag=strtolower($tag); $key=strtolower($key);}
-            //elements that do NOT have the specified attribute
-            if (isset($key[0]) && $key[0]==='!') {$key=substr($key, 1); $no_key=true;}
+                // convert to lowercase
+                if ($this->dom->lowercase) {
+                    $tag = strtolower($tag);
+                    $key = strtolower($key);
+                }
+                //elements that do NOT have the specified attribute
+                if (isset($key[0]) && $key[0] === '!') {
+                    $key = substr($key, 1);
+                    $no_key = true;
+                }
 
-            $result[] = array($tag, $key, $val, $exp, $no_key);
-            if (trim($m[7])===',') {
-                $selectors[] = $result;
-                $result = array();
+                $result[] = array($tag, $key, $val, $exp, $no_key);
+                if (trim($m[7]) === ',') {
+                    $selectors[] = $result;
+                    $result = array();
+                }
             }
         }
         if (count($result)>0)

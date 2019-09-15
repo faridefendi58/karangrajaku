@@ -65,7 +65,11 @@ $container['module'] = function ($c) use ($user) {
 
     if (!empty($uri_path)) { // allow each module to have own theme view
         $chunk = explode("/", $uri_path);
-        $mod_paths = $settings['basePath'].'/modules/'.$chunk[1].'/views';
+        $mod = $chunk[1];
+        if (!empty($chunk[0])) {
+            $mod = $chunk[0];
+        }
+        $mod_paths = $settings['basePath'].'/modules/'.$mod.'/views';
         if (is_dir($mod_paths))
             $view_path = $mod_paths;
     }
@@ -100,6 +104,10 @@ function addFilter($env, $c)
 
     $admin_module = $c->get('settings')['admin']['name'];
     $theme = $c->get('settings')['theme']['name'];
+    $cdn_asset_url = $c->get('settings')['cdn_asset_url'];
+    if (!$c->get('settings')['use_cdn']) {
+        $cdn_asset_url = $base_url .'/../themes/'. $theme .'/assets';
+    }
 
     $filters = [
         new \Twig_SimpleFilter('dump', function ($string) {
@@ -109,10 +117,13 @@ function addFilter($env, $c)
             return $base_url .'/'. $string;
         }),
         new \Twig_SimpleFilter('asset_url', function ($string) use ($base_url, $theme){
-            return $base_url .'/../themes/'. $theme .'/assets/'. $string;
+            return $base_url .'/themes/'. $theme .'/assets/'. $string;
         }),
         new \Twig_SimpleFilter('admin_asset_url', function ($string) use ($base_url, $admin_module) {
             return $base_url .'/protected/modules/'. $admin_module .'/assets/'. $string;
+        }),
+        new \Twig_SimpleFilter('cdn_asset_url', function ($string) use ($cdn_asset_url, $theme){
+            return $cdn_asset_url .'/'. $string;
         }),
         new \Twig_SimpleFilter('module_path', function ($string) use ($base_url) {
             return $base_url .'/protected/modules/'. $string;

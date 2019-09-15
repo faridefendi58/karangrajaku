@@ -80,7 +80,7 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
             $model->handphone = $_POST['Permohonan']['handphone'];
             $model->notes = $_POST['Permohonan']['notes'];
             $model->created_at = date("Y-m-d H:i:s");
-            $save = \ExtensionsModel\RequestSuratModel::model()->save($model);
+            $save = \ExtensionsModel\RequestSuratModel::model()->save(@$model);
             if ($save) {
                 $success = true;
                 $params = [];
@@ -120,14 +120,55 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
                     <b>Tempat Tgl Lahir</b> : ".$_POST['Permohonan']['birth_place']. ", ". $_POST['Permohonan']['birth_date']. '-'. $_POST['Permohonan']['birth_month'].'-'.$_POST['Permohonan']['birth_year']." <br/>
                     <b>No Handphone</b> : ".$_POST['Permohonan']['handphone']." <br/>
                     <br/>
-                    <b>Keperluan</b> :<br/> ".$_POST['Permohonan']['notes']."";
+                    <b>Keperluan</b> :<br/> ".$_POST['Permohonan']['notes'];
 
                     $mail->send();
-                } catch (Exception $e) {
+                } catch (\PHPMailer\PHPMailer\Exception $e) {
                     echo 'Message could not be sent.';
-                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                    echo 'Mailer Error: ' . $mail->ErrorInfo; exit;
                 }
 
+                // also send to user if has valid email
+                if (!empty($model->email)) {
+                    $mail2 = new \PHPMailer\PHPMailer\PHPMailer(true);
+                    try {
+                        //Server settings
+                        $mail2->SMTPDebug = 0;
+                        $mail2->isSMTP();
+                        $mail2->Host = $settings['params']['smtp_host'];
+                        $mail2->SMTPAuth = true;
+                        $mail2->Username = $settings['params']['admin_email'];
+                        $mail2->Password = $settings['params']['smtp_secret'];
+                        $mail2->SMTPSecure = $settings['params']['smtp_secure'];
+                        $mail2->Port = $settings['params']['smtp_port'];
+
+                        //Recipients
+                        $mail2->setFrom($settings['params']['admin_email'], 'Pemdes Karang Raja');
+                        $mail2->addAddress($model->email, $model->name);
+                        $mail2->addReplyTo($settings['params']['admin_email'], 'Pemdes Karang Raja');
+
+                        //Content
+                        $mail2->isHTML(true);
+                        $mail2->Subject = 'Permohonan ' . $smodel->title;
+                        $mail2->Body = "Halo ". $model->name .",
+                    <br/><br/>
+                    Terimakasih telah mengajukan permohonan <b>" . $smodel->title . "</b> di Pemerintah Desa Karang Raja dengan data berikut:
+                    <br/><br/>
+                    <b>Nama</b> : " . $_POST['Permohonan']['name'] . " <br/>
+                    <b>NIK</b> : " . $_POST['Permohonan']['nik'] . " <br/>
+                    <b>Email</b> : " . $_POST['Permohonan']['email'] . " <br/>
+                    <b>Tempat Tgl Lahir</b> : " . $_POST['Permohonan']['birth_place'] . ", " . $_POST['Permohonan']['birth_date'] . '-' . $_POST['Permohonan']['birth_month'] . '-' . $_POST['Permohonan']['birth_year'] . " <br/>
+                    <b>No Handphone</b> : " . $_POST['Permohonan']['handphone'] . " <br/>
+                    <br/>
+                    <b>Keperluan</b> :<br/> " . $_POST['Permohonan']['notes']. " <br/>
+                    <br/><br/>Kami akan segera memproses permohonan Anda.";
+
+                        $mail2->send();
+                    } catch (\PHPMailer\PHPMailer\Exception $e) {
+                        echo 'Message could not be sent.';
+                        echo 'Mailer Error: ' . $mail2->ErrorInfo;
+                    }
+                }
             } else {
                 $errors = \ExtensionsModel\RequestSuratModel::model()->getErrors(true, true);
             }
@@ -137,7 +178,8 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
     return $this->view->render($response, 'surat-permohonan.phtml', [
         'params' => $params,
         'errors' => $errors,
-        'success' => $success
+        'success' => $success,
+        'request' => $request_params
     ]);
 });
 ?>

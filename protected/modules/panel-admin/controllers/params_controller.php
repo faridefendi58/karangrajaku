@@ -11,6 +11,9 @@ class ParamsController extends BaseController
     public function __construct($app, $user)
     {
         parent::__construct($app, $user);
+        if (!empty($this->_settings['installPath'])) {
+            $this->_login_url = '/'.$this->_settings['installPath'].$this->_login_url;
+        }
     }
 
     public function register($app)

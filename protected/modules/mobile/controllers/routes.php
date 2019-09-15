@@ -2,7 +2,7 @@
 // pos routes
 $app->get('/mobile', function ($request, $response, $args) use ($user) {
 	if ($user->isGuest()){
-        return $response->withRedirect('/mobile/default/login');
+        return $response->withRedirect('mobile/default/login');
     }
 
 	return $this->module->render($response, 'default/index.html', [

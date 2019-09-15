@@ -2,7 +2,8 @@
 // panel-admin routes
 $app->get('/panel-admin', function ($request, $response, $args) use ($user) {
 	if ($user->isGuest()){
-        return $response->withRedirect('/panel-admin/default/login');
+	    //$this->settings['installPath'].
+        return $response->withRedirect('panel-admin/default/login');
     }
 
     $vmodel = new \Model\VisitorModel();
