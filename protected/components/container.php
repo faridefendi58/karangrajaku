@@ -168,6 +168,11 @@ function addFilter($env, $c)
                 return $number;
             }
         }),
+		new \Twig_SimpleFilter('phone', function ($string) {
+			//$stripped = trim(preg_replace('/\s+/', ' ', $string));
+			$string = preg_replace("/[^[:alnum:][:space:]]/u", '', $string);
+            return $string;
+        }),
     ];
 
     $uri_path = $c->get('request')->getUri()->getPath();

@@ -57,13 +57,13 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
                     $mail->Port = $settings['params']['smtp_port'];
 
                     //Recipients
-                    $mail->setFrom( $settings['params']['admin_email'], 'Admin Karang Raja' );
+                    $mail->setFrom( $settings['params']['admin_email'], 'Pemdes Karang Raja' );
                     $mail->addAddress( $settings['params']['admin_email'], 'Pemdes Karang Raja' );
                     $mail->addReplyTo( $_POST['Contact']['email'], $_POST['Contact']['name'] );
 
                     //Content
                     $mail->isHTML(true);
-                    $mail->Subject = '[Karang Raja Apps] Kontak Kami';
+                    $mail->Subject = '[Pemdes Karang Raja] Kontak Kami';
                     $mail->Body = "Halo Admin,
                     <br/><br/>
                     Ada pesan baru dari pengunjung dengan data berikut:

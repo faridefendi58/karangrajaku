@@ -39,6 +39,11 @@ class RequestSuratModel extends \Model\BaseModel
             $params['status'] = $data['status'];
         }
 
+        if (isset($data['surat_permohonan_id'])) {
+            $sql .= ' AND t.surat_permohonan_id =:surat_permohonan_id';
+            $params['surat_permohonan_id'] = $data['surat_permohonan_id'];
+        }
+
         $sql .= " ORDER BY t.created_at DESC";
 
         $sql = str_replace(['{tablePrefix}'], [$this->_tbl_prefix], $sql);
@@ -66,7 +71,7 @@ class RequestSuratModel extends \Model\BaseModel
     }
 
     public function getStatistic($data = []) {
-        $sql = "SELECT t.id, t.status, p.title, p.slug, SUM(t.id) AS total 
+        $sql = "SELECT t.id, t.status, p.title, p.slug, COUNT(t.id) AS total, t.surat_permohonan_id 
         FROM {tablePrefix}ext_pemdes_request_surat t 
         LEFT JOIN {tablePrefix}ext_pemdes_surat_permohonan p ON p.id = t.surat_permohonan_id
         WHERE 1";
@@ -77,7 +82,7 @@ class RequestSuratModel extends \Model\BaseModel
             $params['status'] = $data['status'];
         }
 
-        $sql .= " GROUP BY t.status ORDER BY t.created_at DESC";
+        $sql .= " GROUP BY t.surat_permohonan_id ORDER BY t.created_at DESC";
 
         $sql = str_replace(['{tablePrefix}'], [$this->_tbl_prefix], $sql);
 

@@ -16,7 +16,7 @@
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--6-col mdl-cell--6-col-tablet mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title mdl-card--border">
-            <h4 class="mdl-card__title-text"><b>{{ data.title }}</b></h4>
+            <h5 class="mdl-card__title-text"><b>{{ data.title }}</b></h5>
         </div>
         <div class="mdl-card__supporting-text">
             <div class="mdl-grid">
@@ -47,12 +47,12 @@
         <div class="mdl-card__actions mdl-card--border">
             {% if data.status < 2 %}
             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="removeLetter();">
-                Hapus
+                {{ App.tool.translate('Cancel') }}
             </a>
             {% endif %}
             {% if data.status != 1 %}
             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="markAsDone();">
-                Tandai Sudah Selesai
+                {{ App.tool.translate('Mark As Complete') }}
             </a>
             {% endif %}
         </div>
@@ -76,7 +76,7 @@
     }
 
     function removeLetter() {
-        if (confirm("Anda yakin ingin menghapus data ini ?")) {
+        if (confirm("Anda yakin ingin membatalkan data ini ?")) {
             var id = "{{ data.id }}";
             $.ajax({
                 'beforeSend': function() { Loading.show(); },

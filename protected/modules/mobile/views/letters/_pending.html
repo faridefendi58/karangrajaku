@@ -1,4 +1,8 @@
-{% set items = model.getItems({'status':status}) %}
+{% set q_params = {'status':status} %}
+{% if params %}
+    {% set q_params = q_params | merge(params) %}
+{% endif %}
+{% set items = model.getItems(q_params) %}
 <table class="mdl-data-table mdl-shadow--2dp mt-10 data-table">
     <thead>
     <tr>

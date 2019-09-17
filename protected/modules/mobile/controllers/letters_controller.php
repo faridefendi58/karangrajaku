@@ -94,14 +94,14 @@ class LettersController extends BaseController
             return false;
         }
 
-        $result = ['success' => 0, 'Data gagal dihapus'];
+        $result = ['success' => 0, 'Data gagal dibatalkan'];
         $model = \ExtensionsModel\RequestSuratModel::model()->findByPk($args['id']);
         if ($model instanceof \RedBeanPHP\OODBBean) {
             $model->status = 3;
             $update = \ExtensionsModel\RequestSuratModel::model()->update($model);
             if ($update) {
                 $result['success'] = 1;
-                $result['message'] = 'Data telah berhasil dihapus';
+                $result['message'] = 'Data telah berhasil dibatalkan';
             }
         }
 
@@ -124,6 +124,7 @@ class LettersController extends BaseController
 
         $result = ['success' => 0, 'Data gagal disimpan'];
         $model = \ExtensionsModel\RequestSuratModel::model()->findByPk($args['id']);
+        $settings = $this->_settings;
         if ($model instanceof \RedBeanPHP\OODBBean) {
             $model->status = 1;
             $model->processed_at = date("Y-m-d H:i:s");
@@ -132,6 +133,41 @@ class LettersController extends BaseController
             if ($update) {
                 $result['success'] = 1;
                 $result['message'] = 'Data telah berhasil disimpan';
+
+                if (!empty($model->email)) {
+                    $smodel = \ExtensionsModel\SuratPermohonanModel::model()->findByPk($model->surat_permohonan_id);
+
+                    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                    try {
+                        //Server settings
+                        $mail->SMTPDebug = 0;
+                        $mail->isSMTP();
+                        $mail->Host = $settings['params']['smtp_host'];
+                        $mail->SMTPAuth = true;
+                        $mail->Username = $settings['params']['admin_email'];
+                        $mail->Password = $settings['params']['smtp_secret'];
+                        $mail->SMTPSecure = $settings['params']['smtp_secure'];
+                        $mail->Port = $settings['params']['smtp_port'];
+
+                        //Recipients
+                        $mail->setFrom($settings['params']['admin_email'], 'Pemdes Karang Raja');
+                        $mail->addAddress($model->email, $model->name);
+                        $mail->addReplyTo($settings['params']['admin_email'], 'Pemdes Karang Raja');
+
+                        //Content
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Permohonan ' . $smodel->title;
+                        $mail->Body = "Halo ". $model->name .",
+                    <br/><br/>
+                    Pengajuan permohonan <b>" . $smodel->title . "</b> di Pemerintah Desa Karang Raja telah diproses.
+                    <br/><br/>Mohon kesediaannya untuk hadir di kantor desa Karang Raja guna mengambil surat keterangan tersebut.";
+
+                        $mail->send();
+                    } catch (\PHPMailer\PHPMailer\Exception $e) {
+                        echo 'Message could not be sent.';
+                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+                    }
+                }
             }
         }
 

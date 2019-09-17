@@ -16,7 +16,7 @@ Dashboard - {{ App.params.site_name }}
             <div class="mdl-card__supporting-text pb-2 scroll">
                 <div class="mdl-list mdl-list-flush m-0">
                     {% for i, pending in pending_surats %}
-                    <a href="{{ 'mobile/letters/view' | link }}" class="mdl-list__item">
+                    <a href="{{ 'mobile/letters/view' | link }}?surat_permohonan_id={{ pending.surat_permohonan_id }}&title={{ pending.title }}" class="mdl-list__item">
                         <span class="mdl-list__item-primary-content ft-15"> {{ pending.title }}</span>
                         <span class="ft-12">{{ pending.total }}</span>
                     </a>
@@ -31,7 +31,7 @@ Dashboard - {{ App.params.site_name }}
     {% set complete_surats = App.call.model("\\ExtensionsModel\\RequestSuratModel", 'getStatistic', {'status':1}) %}
     <div class="mdl-cell mdl-cell--4-col-phone mdl-cell--4-col-desktop">
         <div class="mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title ft-white mdl-color--blue-700">
+            <div class="mdl-card__title ft-white mdl-color--green-600">
                 <span class="x-icon material-icons mr-2">playlist_add_check</span>Surat Sudah Diproses
             </div>
             <div class="mdl-card__supporting-text pb-2 scroll">
