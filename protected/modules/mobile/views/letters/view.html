@@ -7,6 +7,9 @@
 <header class="demo-header mdl-layout__header mdl-color--green-600 mdl-color-text--white mdl-layout--fixed-tabs">
     <div class="mdl-layout__header-row">
         <span class="mdl-layout-title">{% block pagesection %}{% if not params.title %}{{ App.tool.translate('Application Letter') }}{% else %}{{ params.title | truncate(30) }}{% endif %}{% endblock %}</span>
+		<button onclick="return refreshThis();" class="mdl-button mdl-js-button mdl-button--icon" title="Refresh">
+		  	<i class="material-icons">refresh</i>
+		</button>
         <div class="mdl-layout-spacer"></div>
     </div>
 
@@ -26,6 +29,7 @@
 <style>
     #fixed-tab-2 td, th {width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;}
     .mdl-data-table td {white-space: pre-line;}
+	.mdl-button--icon {position: fixed;right: 10px;}
 </style>
 <!-- Layout Container with Fixed Header and Tabs -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
@@ -82,7 +86,7 @@
             });
         }
 
-        var status = "{{ params.status }}";
+        var status = "{{ params.tab }}";
         if (status.length > 0) {
             var index = parseInt(status) + 1;
             var href = "#fixed-tab-"+ index;
@@ -92,5 +96,10 @@
             $('#fixed-tab-'+ index).addClass('is-active');
         }
     });
+
+	function refreshThis() {
+		location.reload();
+		return false;
+	}
 </script>
 {% endblock %}

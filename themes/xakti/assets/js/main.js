@@ -8,7 +8,7 @@
         if ($('.mdl-card__title').length > 0) {
             $('.mdl-card__title').each(function () {
                 var data_bg = $(this).attr('data-background');
-                if (data_bg.length > 0) {
+                if (typeof data_bg !== typeof undefined && data_bg !== false) {
                     $(this).attr('style', "background:url("+ data_bg +") center / cover;height:200px;");
                     $(this).removeAttr('data-background');
                 }

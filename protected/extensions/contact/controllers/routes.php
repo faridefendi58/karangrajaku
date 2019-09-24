@@ -26,7 +26,7 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
             $model->email = $_POST['Contact']['email'];
             $model->phone = $_POST['Contact']['phone'];
             $model->message = $_POST['Contact']['message'];
-            if (isset($_FILES) && !empty($_FILES['Contact'])) {
+            if (isset($_FILES) && !empty($_FILES['Contact']) && !empty($_FILES['Contact']['name']['image'])) {
                 $path_info = pathinfo($_FILES['Contact']['name']['image']);
                 if (!in_array($path_info['extension'], ['jpg','JPG','jpeg','JPEG','png','PNG'])) {
                     echo json_encode(['status'=>'failed','message'=>'Allowed file type are jpg, png']); exit;
@@ -36,8 +36,10 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
             $model->created_at = date("Y-m-d H:i:s");
             $save = \ExtensionsModel\ContactModel::model()->save($model);
             if ($save) {
-                $uploadfile = 'uploads/images/contacts/' . $model->images;
-                move_uploaded_file($_FILES['Contact']['tmp_name']['image'], $uploadfile);
+				if (!empty($model->images)) {
+                	$uploadfile = 'uploads/images/contacts/' . $model->images;
+                	move_uploaded_file($_FILES['Contact']['tmp_name']['image'], $uploadfile);
+				}
 
                 $success = true;
                 $params = [];

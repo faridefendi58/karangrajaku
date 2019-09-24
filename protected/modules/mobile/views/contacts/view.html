@@ -7,6 +7,9 @@
 <header class="demo-header mdl-layout__header mdl-color--green-600 mdl-color-text--white mdl-layout--fixed-tabs">
     <div class="mdl-layout__header-row">
         <span class="mdl-layout-title">{% block pagesection %}{{ App.tool.translate('Contacts') }}{% endblock %}</span>
+		<button onclick="return refreshThis();" class="mdl-button mdl-js-button mdl-button--icon" title="Refresh">
+		  	<i class="material-icons">refresh</i>
+		</button>
         <div class="mdl-layout-spacer"></div>
     </div>
 
@@ -23,6 +26,7 @@
 <link rel="stylesheet" href="{{ 'mobile/assets/lib/mdl-selectfield/mdl-selectfield.min.css' | module_path }}">
 <style>
     #fixed-tab-2 td, th {width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-o-text-overflow: ellipsis;}
+	.mdl-button--icon {position: fixed;right: 10px;}
 </style>
 <!-- Layout Container with Fixed Header and Tabs -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
@@ -70,5 +74,10 @@
             });
         }
     });
+
+	function refreshThis() {
+		location.reload();
+		return false;
+	}
 </script>
 {% endblock %}

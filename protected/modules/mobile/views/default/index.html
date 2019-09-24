@@ -37,7 +37,7 @@ Dashboard - {{ App.params.site_name }}
             <div class="mdl-card__supporting-text pb-2 scroll">
                 <div class="mdl-list mdl-list-flush m-0">
                     {% for i, complete in complete_surats %}
-                    <a href="{{ 'mobile/letters/view' | link }}?status=1" class="mdl-list__item">
+                    <a href="{{ 'mobile/letters/view' | link }}?tab=1&surat_permohonan_id={{ complete.surat_permohonan_id }}&title={{ complete.title }}" class="mdl-list__item">
                         <span class="mdl-list__item-primary-content ft-15">{{ complete.title }}</span>
                         <span class="ft-12">{{ complete.total }}</span>
                     </a>

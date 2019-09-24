@@ -16,7 +16,7 @@
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--6-col mdl-cell--6-col-tablet mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title mdl-card--border">
-            <h5 class="mdl-card__title-text"><b>{{ data.title }}</b></h5>
+            <p class="mdl-card__title-text"><small><b>{{ data.title }}</b></small></p>
         </div>
         <div class="mdl-card__supporting-text">
             <div class="mdl-grid">
@@ -31,10 +31,10 @@
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>TTL</b></div>
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.birth_place }}, {{ data.birth_date | date("d F Y") }}</div>
             </div>
-            <div class="mdl-grid">
+            {#<div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Alamat</b></div>
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.address }}</div>
-            </div>
+            </div>#}
             <div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>No HP</b></div>
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-phone">{{ data.handphone }}</div>
@@ -50,9 +50,14 @@
                 {{ App.tool.translate('Cancel') }}
             </a>
             {% endif %}
-            {% if data.status != 1 %}
+            {% if data.status == 0 %}
             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="markAsDone();">
                 {{ App.tool.translate('Mark As Complete') }}
+            </a>
+            {% endif %}
+            {% if data.status == 2 %}
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="removePermanent();">
+                {{ App.tool.translate('Delete') }}
             </a>
             {% endif %}
         </div>
@@ -61,6 +66,18 @@
 {% endblock %}
 
 {% block footer %}
+<dialog class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Delete this</h4>
+    <div class="mdl-dialog__content">
+      <p>
+        Do you really want to delete this??
+      </p>
+    </div>
+    <div class="mdl-dialog__actions">
+      <button type="button" class="mdl-button yes">Ya</button>
+      <button type="button" class="mdl-button close">Tidak</button>
+    </div>
+</dialog>
 <div id="ajaxContent" style="display: block;"></div>
 <footer class="mdl-mini-footer mdl-shadow--2dp">
     <div class="mdl-mini-footer--left-section">
@@ -71,12 +88,24 @@
 
 {% block endbodyjs %}
 <script type="text/javascript">
+	var dialog = document.querySelector('dialog');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+
     function goBack() {
         window.history.back();
     }
 
     function removeLetter() {
-        if (confirm("Anda yakin ingin membatalkan data ini ?")) {
+		$('dialog').find('.mdl-dialog__title').html("<small><b>Batalkan Pengajuan Surat</b></small>");
+		$('dialog').find('.mdl-dialog__content').html("<p>Anda yakin ingin membatalkan data ini ?</p>");
+		dialog.showModal();
+		dialog.querySelector('.close').addEventListener('click', function() {
+		  dialog.close();
+		});
+        dialog.querySelector('.yes').addEventListener('click', function() {
+		  	dialog.close();
             var id = "{{ data.id }}";
             $.ajax({
                 'beforeSend': function() { Loading.show(); },
@@ -102,14 +131,21 @@
                     }
                 }
             });
-        }
+        });
 
         return false;
     }
 
     function markAsDone() {
-        if (confirm("Anda yakin data ini sudah diproses?")) {
-            var id = "{{ data.id }}";
+		$('dialog').find('.mdl-dialog__title').html("<small><b>{{ App.tool.translate('Mark As Complete') }}</b></small>");
+		$('dialog').find('.mdl-dialog__content').html("<p>Anda yakin bahwa data ini benar - benar sudah diproses ?</p>");
+		dialog.showModal();
+		dialog.querySelector('.close').addEventListener('click', function() {
+		  dialog.close();
+		});
+		dialog.querySelector('.yes').addEventListener('click', function() {
+		  	dialog.close();
+			var id = "{{ data.id }}";
             $.ajax({
                 'beforeSend': function() { Loading.show(); },
                 'complete': function() { Loading.hide(); },
@@ -134,7 +170,46 @@
                     }
                 }
             });
-        }
+		});
+
+        return false;
+    }
+
+    function removePermanent() {
+        $('dialog').find('.mdl-dialog__title').html("<small><b>Hapus Pengajuan Surat</b></small>");
+        $('dialog').find('.mdl-dialog__content').html("<p>Anda yakin ingin menghapus data ini ?</p>");
+        dialog.showModal();
+        dialog.querySelector('.close').addEventListener('click', function() {
+            dialog.close();
+        });
+        dialog.querySelector('.yes').addEventListener('click', function() {
+            dialog.close();
+            var id = "{{ data.id }}";
+            $.ajax({
+                'beforeSend': function() { Loading.show(); },
+                'complete': function() { Loading.hide(); },
+                'url': "{{ 'mobile/letters/remove-permanent' | link }}/"+id,
+                'type':'post',
+                'dataType':'json',
+                'success': function(data){
+                    if (data.success) {
+                        var notification = document.querySelector('.mdl-js-snackbar');
+                        var data = {
+                            message: data.message,
+                            actionHandler: function(event) {
+                                goBack();
+                            },
+                            actionText: 'Close',
+                            timeout: 5000
+                        };
+                        notification.MaterialSnackbar.showSnackbar(data);
+                        setTimeout(function () {
+                            goBack();
+                        }, 6000);
+                    }
+                }
+            });
+        });
 
         return false;
     }

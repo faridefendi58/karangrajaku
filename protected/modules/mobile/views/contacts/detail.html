@@ -29,9 +29,17 @@
                 <div class="mdl-cell mdl-cell--6-col mdl-cell--2-col-phone">{{ data.phone }}</div>
             </div>
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone"><b>Pesan</b></div>
-                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">{{ data.message }}</div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone mdl-cell--12-col-tablet mdl-cell--12-col-desktop"><b>Pesan</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--12-col-tablet mdl-cell--12-col-desktop">{{ data.message }}</div>
             </div>
+			{% if data.images %}
+			<div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--1-col-phone mdl-cell--12-col-tablet mdl-cell--12-col-desktop"><b>Gambar</b></div>
+                <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+					<img src="{{ 'uploads/images/contacts' | link }}/{{ data.images }}" width="100%"/>
+				</div>
+            </div>
+			{% endif %}
         </div>
         <div class="mdl-card__actions mdl-card--border">
             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="removeMessage();">
@@ -43,6 +51,19 @@
 {% endblock %}
 
 {% block footer %}
+<dialog class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Delete this</h4>
+    <div class="mdl-dialog__content">
+      <p>
+        Do you really want to delete this??
+      </p>
+    </div>
+    <div class="mdl-dialog__actions">
+      <button type="button" class="mdl-button yes">Ya</button>
+      <button type="button" class="mdl-button close">Tidak</button>
+    </div>
+</dialog>
+
 <div id="ajaxContent" style="display: block;"></div>
 <footer class="mdl-mini-footer mdl-shadow--2dp">
     <div class="mdl-mini-footer--left-section">
@@ -53,12 +74,26 @@
 
 {% block endbodyjs %}
 <script type="text/javascript">
+	var dialog = document.querySelector('dialog');
+    if (! dialog.showModal) {
+		if (typeof dialogPolyfill != typeof undefined) {
+      		dialogPolyfill.registerDialog(dialog);
+		}
+    }
+
     function goBack() {
         window.history.back();
     }
 
     function removeMessage() {
-        if (confirm("Anda yakin ingin menghapus data ini ?")) {
+        $('dialog').find('.mdl-dialog__title').html("<small><b>{{ App.tool.translate('Remove') }}</b></small>");
+		$('dialog').find('.mdl-dialog__content').html("<p>Anda yakin ingin menghapus data ini ?</p>");
+		dialog.showModal();
+		dialog.querySelector('.close').addEventListener('click', function() {
+		  dialog.close();
+		});
+		dialog.querySelector('.yes').addEventListener('click', function() {
+		  	dialog.close();
             var id = "{{ data.id }}";
             $.ajax({
                 'beforeSend': function() { Loading.show(); },
@@ -84,7 +119,7 @@
                     }
                 }
             });
-        }
+        });
 
         return false;
     }

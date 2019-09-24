@@ -19,6 +19,7 @@ class LettersController extends BaseController
         $app->map(['POST', 'GET'], '/detail/[{id}]', [$this, 'detail']);
         $app->map(['POST'], '/remove/[{id}]', [$this, 'remove']);
         $app->map(['POST'], '/complete/[{id}]', [$this, 'complete']);
+        $app->map(['POST'], '/remove-permanent/[{id}]', [$this, 'remove_permanent']);
     }
 
     public function accessRules()
@@ -26,7 +27,7 @@ class LettersController extends BaseController
         return [
             ['allow',
                 'actions' => [
-                    'view', 'detail', 'remove', 'complete'
+                    'view', 'detail', 'remove', 'complete', 'remove-permanent'
                 ],
                 'users'=> ['@'],
             ],
@@ -97,7 +98,7 @@ class LettersController extends BaseController
         $result = ['success' => 0, 'Data gagal dibatalkan'];
         $model = \ExtensionsModel\RequestSuratModel::model()->findByPk($args['id']);
         if ($model instanceof \RedBeanPHP\OODBBean) {
-            $model->status = 3;
+            $model->status = 2;
             $update = \ExtensionsModel\RequestSuratModel::model()->update($model);
             if ($update) {
                 $result['success'] = 1;
@@ -160,7 +161,8 @@ class LettersController extends BaseController
                         $mail->Body = "Halo ". $model->name .",
                     <br/><br/>
                     Pengajuan permohonan <b>" . $smodel->title . "</b> di Pemerintah Desa Karang Raja telah diproses.
-                    <br/><br/>Mohon kesediaannya untuk hadir di kantor desa Karang Raja guna mengambil surat keterangan tersebut.";
+                    <br/><br/>Mohon kesediaannya untuk hadir di kantor desa Karang Raja guna mengambil surat keterangan tersebut.
+					<br/><br/>Hormat Kami,<br/><br/>Admin";
 
                         $mail->send();
                     } catch (\PHPMailer\PHPMailer\Exception $e) {
@@ -168,6 +170,33 @@ class LettersController extends BaseController
                         echo 'Mailer Error: ' . $mail->ErrorInfo;
                     }
                 }
+            }
+        }
+
+        return $response->withJson($result);
+    }
+
+    public function remove_permanent($request, $response, $args)
+    {
+        $isAllowed = $this->isAllowed($request, $response, $args);
+        if ($isAllowed instanceof \Slim\Http\Response)
+            return $isAllowed;
+
+        if (!$isAllowed) {
+            return $this->notAllowedAction();
+        }
+
+        if (!isset($args['id'])) {
+            return false;
+        }
+
+        $result = ['success' => 0, 'Data gagal dihapus'];
+        $model = \ExtensionsModel\RequestSuratModel::model()->findByPk($args['id']);
+        if ($model instanceof \RedBeanPHP\OODBBean) {
+            $delete = \ExtensionsModel\RequestSuratModel::model()->delete($model);
+            if ($delete) {
+                $result['success'] = 1;
+                $result['message'] = 'Data telah berhasil dihapus';
             }
         }
 
