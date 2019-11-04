@@ -27,7 +27,13 @@ $app->get('/feed', function ($request, $response, $args) {
 $app->get('/feed/[{id}]', function ($request, $response, $args) {
     if (isset($args['id'])) {
         $tools = new \Components\Tool();
-        $data = $tools->get_rss($args);
+		$params = $request->getParams();
+		if (is_array($params) &&  array_key_exists('c', $params)) {
+			$datas = $tools->get_rss_category(['category' => $params['c']]);
+			$data = $datas['item'][$args['id']];
+		} else {
+        	$data = $tools->get_rss($args);
+		}
 
         return $this->view->render($response, 'feed-detail.phtml', [
             'data' => $data
@@ -93,7 +99,7 @@ $app->post('/surat-permohonan', function ($request, $response, $args){
                     $mail->isSMTP();
                     $mail->Host = $settings['params']['smtp_host'];
                     $mail->SMTPAuth = true;
-                    $mail->Username = $settings['params']['admin_email'];
+                    $mail->Username = $settings['params']['smtp_email'];
                     $mail->Password = $settings['params']['smtp_secret'];
                     $mail->SMTPSecure = $settings['params']['smtp_secure'];
                     $mail->Port = $settings['params']['smtp_port'];

@@ -53,7 +53,7 @@ $app->post('/kontak-kami', function ($request, $response, $args) {
                     $mail->isSMTP();
                     $mail->Host = $settings['params']['smtp_host'];
                     $mail->SMTPAuth = true;
-                    $mail->Username = $settings['params']['admin_email'];
+                    $mail->Username = $settings['params']['smtp_email'];
                     $mail->Password = $settings['params']['smtp_secret'];
                     $mail->SMTPSecure = $settings['params']['smtp_secure'];
                     $mail->Port = $settings['params']['smtp_port'];

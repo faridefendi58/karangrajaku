@@ -9,7 +9,12 @@
             $('.mdl-card__title').each(function () {
                 var data_bg = $(this).attr('data-background');
                 if (typeof data_bg !== typeof undefined && data_bg !== false) {
-                    $(this).attr('style', "background:url("+ data_bg +") center / cover;height:200px;");
+                    var use_default = $(this).attr('use-default-image');
+                    if (typeof use_default !== typeof undefined && use_default !== false) {
+                        $(this).attr('style', "background:url(" + data_bg + ") center no-repeat;height:200px;");
+                    } else {
+                        $(this).attr('style', "background:url(" + data_bg + ") center / cover;height:200px;");
+                    }
                     $(this).removeAttr('data-background');
                 }
             });
